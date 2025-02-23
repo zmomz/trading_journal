@@ -23,7 +23,7 @@ A FastAPI-based **Trading Journal** that allows users to log trades, track perfo
 ### **1. Clone the Repository**
 ```bash
 git clone https://github.com/zmomz/trading_journal.git
-cd trading-journal
+cd trading_journal
 ```
 
 ### **2. Create a Virtual Environment**
@@ -63,12 +63,12 @@ Run the project using **Docker**:
 
 ### **1. Build the Docker Image**
 ```bash
-docker build -t trading-journal .
+docker build -t trading_journal .
 ```
 
 ### **2. Run the Container**
 ```bash
-docker run -d -p 8000:8000 --env-file .env trading-journal
+docker run -d -p 8000:8000 --env-file .env trading_journal
 ```
 
 ### **3. Stop the Container**
