@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+SQLAlchemy
+pydantic
+psycopg2-binary  # If using PostgreSQL
+alembic  # For migrations
+python-dotenv  # For environment variable management
+passlib[bcrypt]  # For password hashing
+pyjwt  # For JWT authentication
+pytest  # For testing

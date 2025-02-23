@@ -1,0 +1,36 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.env
+
+# Logs and databases
+logs/
+*.log
+
+# Alembic migrations
+alembic/versions/
+
+# Database files
+*.sqlite
+*.db
+
+# Docker
+docker-compose.override.yml
+
+# VS Code settings
+.vscode/
+
+# Python packaging
+*.egg-info/
+dist/
+build/
+
+# Pytest cache
+.pytest_cache/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
