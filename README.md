@@ -22,7 +22,7 @@ A FastAPI-based **Trading Journal** that allows users to log trades, track perfo
 
 ### **1. Clone the Repository**
 ```bash
-git clone https://github.com/zmomz/trading-journal.git
+git clone https://github.com/zmomz/trading_journal.git
 cd trading-journal
 ```
 
