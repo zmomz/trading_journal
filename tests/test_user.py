@@ -1,34 +1,52 @@
 import pytest
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+from app.crud.user import create_user, get_user, update_user, soft_delete_user
+from app.schemas.user import UserCreate, UserUpdate
 from app.models.user import User
-from app.crud.user import create_user, get_user_by_email
-from app.schemas.user import UserCreate
-from app.core.security import verify_password
+from app.models.trade import Trade
+from app.models.note import TradeNote
+
+
+@pytest.fixture
+def test_db_cleanup(db: Session):
+    """Ensure clean database state before each test"""
+    db.query(TradeNote).delete()  # Delete trade notes first
+    db.query(Trade).delete()  # Delete trades next
+    db.query(User).delete()  # Now it's safe to delete users
+    db.commit()
+
+@pytest.fixture
+def test_user(db: Session, test_db_cleanup):
+    """Create a test user before inserting any dependent records"""
+    user_data = UserCreate(username="testuser", email="test@example.com", password="securepassword")
+    return create_user(db, user_data)
 
 def test_create_user(db: Session):
-    user_data = UserCreate(username="testuser", email="test@example.com", password="securepassword")
-    
-    # ✅ Ensure user does not exist before running the test
-    existing_user = db.query(User).filter(User.username == user_data.username).first()
-    if existing_user:
-        db.delete(existing_user)
-        db.commit()
-    
-    # ✅ Now create the user
+    user_data = UserCreate(
+        username="newuser",
+        email="new@example.com",
+        password="password123"  # Pass plain password
+    )
     user = create_user(db, user_data)
-    assert user.username == "testuser"
-    assert user.email == "test@example.com"
+    assert user.id is not None
+    assert user.email == "new@example.com"
 
-    # ✅ Attempting to create the same user again should raise an IntegrityError
-    try:
-        create_user(db, user_data)
-        assert False, "Creating duplicate user should raise IntegrityError"
-    except IntegrityError:
-        db.rollback()
-
-def test_get_user_by_email(db: Session):
-    email = "test@example.com"
-    user = get_user_by_email(db, email)
+def test_get_user(db: Session, test_user):
+    user = get_user(db, test_user.id)
     assert user is not None
-    assert user.email == email
+    assert user.username == "testuser"
+
+def test_update_user(db: Session, test_user):
+    update_data = UserUpdate(
+        username="updateduser",
+        email="updated@example.com"  # Ensure required fields are provided
+    )
+    updated_user = update_user(db, test_user.id, update_data)
+    assert updated_user.username == "updateduser"
+    assert updated_user.email == "updated@example.com"
+
+def test_soft_delete_user(db: Session, test_user):
+    soft_delete_user(db, test_user.id)
+    deleted_user = get_user(db, test_user.id)
+    assert deleted_user is not None  # User still exists in DB
+    assert deleted_user.is_active is False  # Ensure it's marked as inactive

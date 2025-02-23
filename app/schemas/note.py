@@ -12,8 +12,10 @@ class TradeNoteBase(BaseModel):
 class TradeNoteCreate(TradeNoteBase):
     pass
 
-class TradeNoteUpdate(BaseModel):
-    pass
+class TradeNoteUpdate(TradeNoteBase):
+    trade_id: Optional[int] = None 
+    model_config = ConfigDict(from_attributes=True)
+
 
 class TradeNoteResponse(TradeNoteBase):
     id: int

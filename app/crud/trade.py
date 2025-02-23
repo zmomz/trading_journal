@@ -4,10 +4,11 @@ from app.schemas.trade import TradeCreate, TradeUpdate
 from datetime import datetime
 
 def get_trade(db: Session, trade_id: int):
-    return db.query(Trade).filter(Trade.id == trade_id).first()
+    return db.query(Trade).filter(Trade.id == trade_id, Trade.is_deleted == False).first()
 
 def get_trades_by_user(db: Session, user_id: int):
     return db.query(Trade).filter(Trade.user_id == user_id, Trade.is_deleted == False).all()
+
 
 def create_trade(db: Session, trade: TradeCreate, user_id: int):
     db_trade = Trade(
@@ -35,16 +36,16 @@ def update_trade(db: Session, trade_id: int, trade_data: TradeUpdate):
     trade = db.query(Trade).filter(Trade.id == trade_id).first()
     if not trade:
         return None
-    for key, value in trade_data.dict(exclude_unset=True).items():
+    for key, value in trade_data.model_dump(exclude_unset=True).items():
         setattr(trade, key, value)
     db.commit()
     db.refresh(trade)
     return trade
 
 def delete_trade(db: Session, trade_id: int):
-    trade = db.query(Trade).filter(Trade.id == trade_id).first()
+    trade = db.query(Trade).filter(Trade.id == trade_id, Trade.is_deleted == False).first()
     if not trade:
-        return None
+        return None  # Prevent trying to delete an already deleted trade
     trade.is_deleted = True  
     db.commit()
     return trade

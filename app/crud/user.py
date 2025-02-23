@@ -40,6 +40,7 @@ def soft_delete_user(db: Session, user_id: int):
     if not db_user:
         return None
 
-    db_user.is_active = False  # Soft delete
+    db_user.is_active = False  # Soft delete by marking inactive
     db.commit()
-    return db_user
+    db.refresh(db_user)  # Ensure it's refreshed before returning
+    return db_user  # Return the updated user

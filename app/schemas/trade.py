@@ -28,6 +28,17 @@ class TradeResponse(TradeBase):
 
     model_config = ConfigDict(from_attributes=True)
 
-class TradeUpdate(TradeBase):
+class TradeUpdate(BaseModel):
+    asset_symbol: Optional[str] = None
+    market: Optional[str] = None
+    currency: Optional[str] = None
+    trade_type: Optional[str] = None
+    entry_price: Optional[float] = None
     exit_price: Optional[float] = None
+    position_size: Optional[float] = None
+    leverage: Optional[float] = None
+    stop_loss: Optional[float] = None
+    take_profit: Optional[float] = None
+    commission: Optional[float] = None
+    fees: Optional[float] = None
     closed_at: Optional[datetime] = None
