@@ -27,3 +27,7 @@ class TradeResponse(TradeBase):
     is_closed: bool
 
     model_config = ConfigDict(from_attributes=True)
+
+class TradeUpdate(TradeBase):
+    exit_price: Optional[float] = None
+    closed_at: Optional[datetime] = None

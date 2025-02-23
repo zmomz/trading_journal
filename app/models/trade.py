@@ -23,7 +23,8 @@ class Trade(Base):
     executed_at = Column(DateTime, default=datetime.utcnow)
     closed_at = Column(DateTime, nullable=True)
     is_closed = Column(Boolean, default=False)
-    
+    is_deleted = Column(Boolean, default=False) # Soft delete flag
+
     user = relationship("User", back_populates="trades")
     dca_entries = relationship("DCAEntry", back_populates="trade")
     notes = relationship("TradeNote", back_populates="trade")
